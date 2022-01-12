@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const Input =  ({type, placeholder}) => {
     return (
-        <StyledInput type = {type} placeholder={placeholder} />
+        <StyledInput type = {type} placeholder={placeholder}/>
     )
 }
 

@@ -1,43 +1,78 @@
 import styled from 'styled-components';
 import {FaFacebookF, FaInstagram, FaTwitter} from 'react-icons/fa';
-import Input from './Input';
+
 import Button from './Button';
 import Icon from './Icon';
 import React, {useState} from 'react';
+import {useCookies} from "react-cookie";
 
+import axios from "axios";
+axios.defaults.withCredentails = true;
+const headers = {withCredentails : true};
 
 const Login = () => {
-    const testUser = {
-        id : "sortinghyeok",
-        password : "sorting123"
-    }
+   const [cookies, setCookie, removeCookie] = useCookies(['cookie-name'])
 
-    const [user, setUser] = useState({id : "", password : ""});
-    const [n_user, set_nUser] = useState({id : "", password : ""});
+   
+    const [user, setUser] = useState({uid : "", password : ""});
     const [error, setError] = useState("");
-
-    const tryLogin = n_users => {
-     
-        console.log(n_users);
-        if(n_user.id === testUser.id && n_user.password === testUser.password)
-        {
-          console.log("테스트 로그인 성공");
-          setUser({
-            id : user.id,
-            password : user.password
-          });
-        }
-        else{
-          console.log("로그인 실패")
-          setError("로그인 실패")
-          alert(error)
-        }
-    }
 
     const submitHandler = e => {
         e.preventDefault();
-        tryLogin(n_user);
+        login(user);
     }
+    const login = user => {
+        console.log(user.uid);
+        if(user.uid === "")
+        {console.log("there is no userid");}
+        else
+        {
+            setCookie('login_id', user.uid,{ path : "/"});
+            console.log(user.uid);
+        }
+        
+      //  $.cookie("login_id", userid, {expire:1, path : '/'});
+        if(user.uid === "" || user.uid === undefined){
+            alert("올바른 아이디를 입력해주세요");
+            return;
+        }
+        else if(user.password === "" || user.password === undefined)
+        {
+            alert("비밀번호가 틀렸습니다.");
+            return;
+        }
+
+        const send_param = {
+            headers,
+            id : user.uid,
+            password : user.password
+        };
+
+        axios
+        .post("http://localhost:3000/login", send_param)
+        .then(returnData => {
+            if(returnData.data.message){
+                setCookie('login_id', user.uid,{ path : "/"});
+                alert(returnData.data.message);
+
+            }
+            else{
+                alert(returnData.data.message);
+                //로그인 실패
+            }
+        })
+        .catch(err => {    
+            setError(err);
+            console.log(error);
+        })
+    };
+    //임시 저장 아이디 및 패스워드
+    const testUser = {
+        headers,
+        id : "sortinghyeok",
+        password : "sorting123"
+    };
+
 
     const FaceBookBackground = "linear-gradient(to right, #0546A0 0%, #663FB6 100%)";
     const InstagramBackground = "linear-gradient(to right, #A12AC4 0%, #ED586C 40%, #F0A853 100%)";
@@ -47,15 +82,16 @@ const Login = () => {
         <MainContainer>
             <LogoImage src = "https://img.etnews.com/photonews/2104/1403026_20210419140535_358_0003.jpg" />
            <InputContainer>
-                <Input type = "text" placeholder = "아이디" 
-                onChange = {e => set_nUser({...n_user, id : e.target.value})}
-                value = {n_user.id}/>
-                
+                <Input type = "text" placeholder = "아이디" id = "uid"
+                onChange = {e => setUser({...user, uid : e.target.value})}
+                value = {user.id} 
+                />
            </InputContainer>   
            <InputContainer>
-           <Input type = "password" placeholder = "비밀번호"
-                onChange = {e => set_nUser({...n_user, password : e.target.value})}
-                value = {n_user.password}/>
+                <Input type = "password" placeholder = "비밀번호" id = "password"
+                onChange = {e => setUser({...user, password : e.target.value})}
+                value = {user.password}
+                />
            </InputContainer>  
            <ButtonContainer>
                <Button content = "로그인" type = "submit"></Button>
@@ -80,6 +116,30 @@ const Login = () => {
         
     );
 }
+
+const Input =  styled.input`
+background : rgba(255, 255, 255, 0.15);
+    box-shadow : 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+    border-radius : 2rem;
+    width : 80%;
+    height : 3rem;
+    padding : 1rem;
+    border : none;
+    outline : none;
+    right : 30;
+    color : #3c354e;
+    font-size : 14px;
+    font-weight : bold;
+    &: focus {
+        display : inline-block;
+        box-shadow : 0 0 0 0.2rem #4f4f4f;
+        backdrop-filter : blur(12rem);
+        border-radius : 2rem;
+    }
+`;
+
+
+
 const AllCover = styled.div`
     background-size : cover;/*cover : 배경 크기가 항상 요소보다 크거나 같다*/
     display : flex;

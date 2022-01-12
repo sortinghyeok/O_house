@@ -1,9 +1,10 @@
 import './App.css';
-import React,{useState,useEffect} from 'react'
-import styled from 'styled-components';
+import React from 'react'
+
 import Login from'./pages/Login/Login';
 import Signup from'./pages/Signup/Signup'
 import Main from'./pages/Main/Main';
+import Event from './pages/Event/Board';
 import {
   BrowserRouter,
   Routes,
@@ -45,6 +46,7 @@ function App() {
               <Route path ="/" element={<Main/>}/>
               <Route path ="/login" element={<Login/>}/>
               <Route path ="/signup" element={<Signup/>}></Route>
+              <Route path = "/event" element = {<Event/>}></Route>
             </Routes>
         </div>
       
