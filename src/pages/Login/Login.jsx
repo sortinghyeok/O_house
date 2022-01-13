@@ -23,15 +23,15 @@ const Login = () => {
     }
     const login = user => {
         console.log(user.uid);
-        if(user.uid === "")
+        /*if(user.uid === "")
         {console.log("there is no userid");}
         else
         {
             setCookie('login_id', user.uid,{ path : "/"});
             console.log(user.uid);
-        }
+        }*/
         
-      //  $.cookie("login_id", userid, {expire:1, path : '/'});
+     
         if(user.uid === "" || user.uid === undefined){
             alert("올바른 아이디를 입력해주세요");
             return;

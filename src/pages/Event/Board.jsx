@@ -1,80 +1,74 @@
+import React, { useState,useEffect } from "react";
 import styled from "styled-components";
-import React, {useState} from 'react';
+import GridCards from "./GridCards";
+import {Row} from "antd";
+import img1 from "./img/img1.png";
+import img2 from"./img/img2.png";
 
+import "antd/dist/antd.css"
+const Advices =() =>{
+    const [images, setImages] =useState([img1, img2])//임시 이미지
+    const [items,setItems] = useState([])
+    const load = () =>{
+        console.log("load");
+        setItems([...items,...images]) //기존 아이템리스트에 이미지 추가(임시)
+    }
+    useEffect(() => {
+        load();
+    }, [])
 
-//grid는 12개로 구성, 즉 2/8/2 그리드 구성을 통해 가운데 정렬 역할을 하게 한 것
-const Board = () => {
-  const[date, setDate] = useState({year : "", month : "", date : ""})
-
-  const settingDate = () => {
-    const today = new Date();
-    setDate({year : today.getFullYear(), 
-    month : today.getMonth(),
-    date : today.getDate()}
+    return(
+        <React.Fragment>
+            
+            <Scroll>
+                <Row gutter={20}>
+                {items && items.map((item,index)=>( //반복문
+                        <React.Fragment key={index}>
+                            <GridCards
+                            image ={item}
+                            >
+                            </GridCards>
+                        </React.Fragment>
+                    ))}
+              
+                </Row>
+                <LoadMore onClick={load}>Load</LoadMore>
+            </Scroll>
+        </React.Fragment>
     )
-  }
-  return (
-   <Container>
-     <Row>
-        <Card>
-        One of three columns
-        <button onClick = {settingDate}>{date.year}</button>
-        </Card>      
-        <Card>
-        One of three columns
-        <button onClick = {settingDate}>{date.year}</button>
-        </Card>
-    </Row>
-    <Row>
-        <Card>
-        One of three columns
-        <button onClick = {settingDate}>{date.year}</button>
-        </Card>      
-        <Card>
-        One of three columns
-        <button onClick = {settingDate}>{date.year}</button>
-        </Card>
-    </Row>
-    <Row>
-        <Card>
-        One of three columns
-        <button onClick = {settingDate}>{date.year}</button>
-        </Card>      
-        <Card>
-        One of three columns
-        <button onClick = {settingDate}>{date.year}</button>
-        </Card>
-    </Row>
-    <Row>
-        <Card>
-        One of three columns
-        <button onClick = {settingDate}>{date.year}</button>
-        </Card>      
-        <Card>
-        One of three columns
-        <button onClick = {settingDate}>{date.year}</button>
-        </Card>
-    </Row>
-   </Container>
-  )
 }
 
-const Container = styled.div`
-  margin : 200px;
-`;
+export default Advices
+const Scroll =styled.div`
+margin-top : 300px;
+position: relative;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+width : 1256px;
+background-color: #fff;
+border-bottom: 1px solid #ededed;
 
-const Row = styled.div`
-  display : grid;
-  grid-template-columns: 420px 420px;
-  grid-template-rows: 100px 100px;
-`;
+`
+const Text =styled.div`
+  position: relative;
+  display: inline-block;
+  margin: 6px 10px 0;
+  padding: 14px 6px;
+  font-size: 25px;
+  line-height: 26px;
+  font-weight: 700;
+  color: #0;
+  
+`
+const LoadMore = styled.button`
+    cursor: pointer;
+    color: #198754;
+    border-color: #198754;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    border-radius: 0.25rem;
+    
 
-const Card = styled.div`
-  height : 100px;
-  width : 95%;
-  margin : 20px;
-  border-style: solid;
-  border-radius : 15px;
-`;
-
-export default Board
+`
