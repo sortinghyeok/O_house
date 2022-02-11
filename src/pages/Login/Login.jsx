@@ -23,14 +23,6 @@ const Login = () => {
     }
     const login = user => {
         console.log(user.uid);
-        /*if(user.uid === "")
-        {console.log("there is no userid");}
-        else
-        {
-            setCookie('login_id', user.uid,{ path : "/"});
-            console.log(user.uid);
-        }*/
-        
      
         if(user.uid === "" || user.uid === undefined){
             alert("올바른 아이디를 입력해주세요");
@@ -43,21 +35,28 @@ const Login = () => {
         }
 
         const send_param = {
-            headers,
-            id : user.uid,
+            email : user.uid,//email로 수정
             password : user.password
         };
-
+ 
         axios
-        .post("http://localhost:3000/login", send_param)
-        .then(returnData => {
-            if(returnData.data.message){
-                setCookie('login_id', user.uid,{ path : "/"});
-                alert(returnData.data.message);
-
+        .post("http://localhost:8080/users/login", send_param)
+        .then(function(response) {    
+            const isSuccess = response.data.isSuccess;
+            if(isSuccess !== true)
+            {
+                console.log(response.data.message);
+                return;
+            }
+            const accessToken = response.data.result.accessToken;
+            axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`
+            console.log(accessToken);
+            if(accessToken){
+                setCookie('login_id', accessToken, { path : "/"});
+                alert("login success");
             }
             else{
-                alert(returnData.data.message);
+                alert("login failed");
                 //로그인 실패
             }
         })

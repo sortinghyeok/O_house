@@ -40,7 +40,7 @@ const Advices =() =>{
 
 export default Advices
 const Scroll =styled.div`
-margin-top : 300px;
+margin-top : 50px;
 position: relative;
 display: flex;
 flex-direction: column;
@@ -69,6 +69,7 @@ const LoadMore = styled.button`
     padding: 0.375rem 0.75rem;
     font-size: 1rem;
     border-radius: 0.25rem;
+    margin: 30px 50px;
     
 
 `
